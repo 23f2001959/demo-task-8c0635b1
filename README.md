@@ -1,23 +1,22 @@
 # Snake and Ladder Game
 
-This project is a browser-based Snake and Ladder game implemented in a single HTML file. It includes all necessary CSS and JavaScript inline, without the need for external dependencies. The game board is rendered as a 10x10 grid, with two players taking turns to roll the dice, move their tokens, and try to reach the finish line first.
+This project is a complete, functional browser-based Snake and Ladder game implemented in a single HTML file. The game includes a 10x10 game board, two players, dice rolls, player token movement, snake and ladder logic, turn indicator, winner detection, and a reset button. The dice value is prominently displayed for easy visibility.
 
 ## Setup
-
-To run this game, simply copy the contents of the HTML file into a new HTML document and open it in a web browser. No additional setup or installation is required.
+To play the Snake and Ladder game, simply copy the raw HTML code provided in the `index.html` file and paste it into a new HTML document. Save the file and open it in your web browser to start playing.
 
 ## Usage
-
-- Click the "Roll Dice" button to roll the dice and move your token.
-- The number rolled on the dice is displayed prominently on the page, either as a large number or as a graphic representation.
-- Follow the instructions on the game board to climb ladders and avoid snakes.
-- The game will indicate whose turn it is and when a player wins.
-- Use the "Reset" button to start a new game.
+- Click the "Roll Dice" button to roll the dice and move your player token.
+- Player 1 is represented by a green token, and Player 2 is represented by a blue token.
+- Follow the instructions displayed on the game board when landing on a snake or ladder.
+- The current player's turn is indicated at the top of the game board.
+- The first player to reach square 100 wins the game.
+- Click the "Reset Game" button to start a new game.
 
 ## Code Explanation
-
-The HTML file contains all the necessary markup, including the game board grid, player tokens, dice visualization, and buttons. Inline CSS styles are used for layout and design, while inline JavaScript handles game logic such as dice rolling, player movement, snake and ladder logic, turn tracking, and win detection.
+The game logic is implemented using inline CSS and JavaScript within the HTML file. The game board is rendered dynamically using HTML elements, and player movement is controlled through JavaScript functions. Snake and ladder positions are defined within the code, and dice rolls are simulated using random number generation.
 
 ## License
+This project is licensed under the MIT License. Feel free to use, modify, and distribute the code as needed. Enjoy playing the Snake and Ladder game!
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
+**Note:** Make sure to keep the dice visualization prominently displayed for a seamless gaming experience.
