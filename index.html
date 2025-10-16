@@ -1,113 +1,255 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snake and Ladder Game</title>
+</head>
+
+<body>
     <style>
-        .game-board {
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        
+        .board {
             display: grid;
             grid-template-columns: repeat(10, 1fr);
             grid-template-rows: repeat(10, 1fr);
-            width: 600px;
-            height: 600px;
-            border: 2px solid black;
+            gap: 1px;
+            margin: 20px auto;
         }
-        .player-one, .player-two {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: red;
+        
+        .cell {
+            border: 1px solid black;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
+            height: 60px;
+            width: 60px;
+        }
+        
+        #player1 {
+            background-color: red;
+            color: white;
+            font-weight: bold;
+            border-radius: 50%;
+        }
+        
+        #player2 {
+            background-color: blue;
+            color: white;
+            font-weight: bold;
+            border-radius: 50%;
+        }
+        
+        #dice {
             font-size: 24px;
-        }
-        .snake {
-            color: blue;
-        }
-        .ladder {
-            color: green;
+            margin-top: 20px;
         }
     </style>
-</head>
-<body>
-    <div class="game-board"></div>
+
+    <div id="dice">0</div>
     <button onclick="rollDice()">Roll Dice</button>
-    <span id="dice-value"></span>
-    <br>
-    <span id="turn"></span>
-    <button onclick="resetGame()">Reset</button>
+    <p id="turn">Player 1's turn</p>
+    <div class="board">
+        <div class="cell" id="c100">100</div>
+        <div class="cell" id="c99">99</div>
+        <div class="cell" id="c98">98</div>
+        <div class="cell" id="c97">97</div>
+        <div class="cell" id="c96">96</div>
+        <div class="cell" id="c95">95</div>
+        <div class="cell" id="c94">94</div>
+        <div class="cell" id="c93">93</div>
+        <div class="cell" id="c92">92</div>
+        <div class="cell" id="c91">91</div>
+
+        <div class="cell" id="c81">81</div>
+        <div class="cell" id="c82">82</div>
+        <div class="cell" id="c83">83</div>
+        <div class="cell" id="c84">84</div>
+        <div class="cell" id="c85">85</div>
+        <div class="cell" id="c86">86</div>
+        <div class="cell" id="c87">87</div>
+        <div class="cell" id="c88">88</div>
+        <div class="cell" id="c89">89</div>
+        <div class="cell" id="c90">90</div>
+
+        <div class="cell" id="c80">80</div>
+        <div class="cell" id="c79">79</div>
+        <div class="cell" id="c78">78</div>
+        <div class="cell" id="c77">77</div>
+        <div class="cell" id="c76">76</div>
+        <div class="cell" id="c75">75</div>
+        <div class="cell" id="c74">74</div>
+        <div class="cell" id="c73">73</div>
+        <div class="cell" id="c72">72</div>
+        <div class="cell" id="c71">71</div>
+
+        <div class="cell" id="c61">61</div>
+        <div class="cell" id="c62">62</div>
+        <div class="cell" id="c63">63</div>
+        <div class="cell" id="c64">64</div>
+        <div class="cell" id="c65">65</div>
+        <div class="cell" id="c66">66</div>
+        <div class="cell" id="c67">67</div>
+        <div class="cell" id="c68">68</div>
+        <div class="cell" id="c69">69</div>
+        <div class="cell" id="c70">70</div>
+
+        <div class="cell" id="c60">60</div>
+        <div class="cell" id="c59">59</div>
+        <div class="cell" id="c58">58</div>
+        <div class="cell" id="c57">57</div>
+        <div class="cell" id="c56">56</div>
+        <div class="cell" id="c55">55</div>
+        <div class="cell" id="c54">54</div>
+        <div class="cell" id="c53">53</div>
+        <div class="cell" id="c52">52</div>
+        <div class="cell" id="c51">51</div>
+
+        <div class="cell" id="c41">41</div>
+        <div class="cell" id="c42">42</div>
+        <div class="cell" id="c43">43</div>
+        <div class="cell" id="c44">44</div>
+        <div class="cell" id="c45">45</div>
+        <div class="cell" id="c46">46</div>
+        <div class="cell" id="c47">47</div>
+        <div class="cell" id="c48">48</div>
+        <div class="cell" id="c49">49</div>
+        <div class="cell" id="c50">50</div>
+
+        <div class="cell" id="c40">40</div>
+        <div class="cell" id="c39">39</div>
+        <div class="cell" id="c38">38</div>
+        <div class="cell" id="c37">37</div>
+        <div class="cell" id="c36">36</div>
+        <div class="cell" id="c35">35</div>
+        <div class="cell" id="c34">34</div>
+        <div class="cell" id="c33">33</div>
+        <div class="cell" id="c32">32</div>
+        <div class="cell" id="c31">31</div>
+
+        <div class="cell" id="c21">21</div>
+        <div class="cell" id="c22">22</div>
+        <div class="cell" id="c23">23</div>
+        <div class="cell" id="c24">24</div>
+        <div class="cell" id="c25">25</div>
+        <div class="cell" id="c26">26</div>
+        <div class="cell" id="c27">27</div>
+        <div class="cell" id="c28">28</div>
+        <div class="cell" id="c29">29</div>
+        <div class="cell" id="c30">30</div>
+
+        <div class="cell" id="c20">20</div>
+        <div class="cell" id="c19">19</div>
+        <div class="cell" id="c18">18</div>
+        <div class="cell" id="c17">17</div>
+        <div class="cell" id="c16">16</div>
+        <div class="cell" id="c15">15</div>
+        <div class="cell" id="c14">14</div>
+        <div class="cell" id="c13">13</div>
+        <div class="cell" id="c12">12</div>
+        <div class="cell" id="c11">11</div>
+
+        <div class="cell" id="c1">1</div>
+        <div class="cell" id="c2">2</div>
+        <div class="cell" id="c3">3</div>
+        <div class="cell" id="c4">4</div>
+        <div class="cell" id="c5">5</div>
+        <div class="cell" id="c6">6</div>
+        <div class="cell" id="c7">7</div>
+        <div class="cell" id="c8">8</div>
+        <div class="cell" id="c9">9</div>
+        <div class="cell" id="c10">10</div>
+    </div>
+    <button onclick="resetGame()">Reset Game</button>
 
     <script>
         let currentPlayer = 1;
-        let playerOnePosition = 1;
-        let playerTwoPosition = 1;
+        const players = {
+            1: 1,
+            2: 1
+        };
 
-        const snakesAndLadders = {
-            16: 6, 47: 26, 49: 11, 56: 53, 62: 19, 64: 60,
-            87: 24, 93: 73, 95: 75, 98: 78
+        const snakes = {
+            16: 6,
+            47: 26,
+            49: 11,
+            56: 53,
+            62: 19,
+            64: 60,
+            87: 24,
+            93: 73,
+            95: 75,
+            98: 78
+        };
+
+        const ladders = {
+            1: 38,
+            4: 14,
+            9: 31,
+            21: 42,
+            28: 84,
+            36: 44,
+            51: 67,
+            71: 91,
+            80: 100
         };
 
         function rollDice() {
             const diceValue = Math.floor(Math.random() * 6) + 1;
-            document.getElementById('dice-value').innerText = diceValue;
+            document.getElementById('dice').innerText = diceValue;
+
             movePlayer(diceValue);
         }
 
         function movePlayer(steps) {
-            const currentPosition = currentPlayer === 1 ? playerOnePosition : playerTwoPosition;
+            const currentPosition = players[currentPlayer];
             let newPosition = currentPosition + steps;
-            if (newPosition in snakesAndLadders) {
-                newPosition = snakesAndLadders[newPosition];
+            if (newPosition > 100) {
+                newPosition = 100 - (newPosition - 100);
             }
-            if (newPosition <= 100) {
-                currentPlayer === 1 ? playerOnePosition = newPosition : playerTwoPosition = newPosition;
-                renderPlayers();
-                if (newPosition === 100) {
-                    alert(`Player ${currentPlayer} wins!`);
-                } else {
-                    currentPlayer = currentPlayer === 1 ? 2 : 1;
-                    document.getElementById('turn').innerText = `Player ${currentPlayer}'s turn`;
-                }
-            }
-        }
 
-        function renderPlayers() {
-            document.querySelector('.game-board').innerHTML = '';
-            for (let i = 1; i <= 100; i++) {
-                const cell = document.createElement('div');
-                cell.classList.add('cell');
-                if (i in snakesAndLadders) {
-                    cell.classList.add('snake');
-                }
-                if (i === 100) {
-                    cell.classList.add('ladder');
-                }
-                if (playerOnePosition === i) {
-                    const playerOneToken = document.createElement('div');
-                    playerOneToken.classList.add('player-one');
-                    playerOneToken.innerText = 'P1';
-                    cell.appendChild(playerOneToken);
-                }
-                if (playerTwoPosition === i) {
-                    const playerTwoToken = document.createElement('div');
-                    playerTwoToken.classList.add('player-two');
-                    playerTwoToken.innerText = 'P2';
-                    cell.appendChild(playerTwoToken);
-                }
-                document.querySelector('.game-board').appendChild(cell);
+            if (snakes[newPosition]) {
+                newPosition = snakes[newPosition];
+            } else if (ladders[newPosition]) {
+                newPosition = ladders[newPosition];
+            }
+
+            document.getElementById(`c${currentPosition}`).removeAttribute('class');
+            document.getElementById(`c${newPosition}`).className = `cell ${currentPlayer === 1 ? 'player1' : 'player2'}`;
+
+            players[currentPlayer] = newPosition;
+
+            if (newPosition === 100) {
+                alert(`Player ${currentPlayer} wins!`);
+            } else {
+                currentPlayer = currentPlayer === 1 ? 2 : 1;
+                document.getElementById('turn').innerText = `Player ${currentPlayer}'s turn`;
             }
         }
 
         function resetGame() {
+            players[1] = 1;
+            players[2] = 1;
             currentPlayer = 1;
-            playerOnePosition = 1;
-            playerTwoPosition = 1;
-            document.getElementById('dice-value').innerText = '';
-            document.getElementById('turn').innerText = "Player 1's turn";
-            renderPlayers();
+
+            document.getElementById('dice').innerText = 0;
+            document.getElementById('turn').innerText = `Player 1's turn`;
+
+            for (let i = 1; i <= 100; i++) {
+                document.getElementById(`c${i}`).removeAttribute('class');
+            }
+
+            document.getElementById('c1').className = 'cell player1';
         }
 
-        renderPlayers();
+        window.onload = resetGame;
     </script>
 </body>
+
 </html>
