@@ -1,122 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Snake and Ladder Game</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-  }
-  .game-board {
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(10, 1fr);
-    width: 80vw;
-    height: 80vh;
-    border: 1px solid black;
-    margin: 0 auto;
-  }
-  .tile {
-    border: 1px solid black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  #player1 {
-    background-color: red;
-  }
-  #player2 {
-    background-color: blue;
-  }
-  #dice {
-    font-size: 2em;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake and Ladder Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        #game-board {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            grid-template-rows: repeat(10, 1fr);
+            width: 80vw;
+            height: 80vw;
+            margin: 20px auto;
+        }
+
+        .tile {
+            border: 1px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #player1-token {
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        #player2-token {
+            width: 20px;
+            height: 20px;
+            background-color: blue;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        #dice {
+            font-size: 2em;
+            margin-top: 20px;
+        }
+
+        #players-turn {
+            font-size: 1.5em;
+            margin-top: 10px;
+        }
+
+        #winner {
+            font-size: 2em;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-top: 20px;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+    </style>
 </head>
+
 <body>
+    <div id="game-board">
+        <div class="tile" id="tile1"></div>
+        <!-- Add more tiles for a 10x10 board -->
+        <div class="tile" id="tile100"></div>
+    </div>
+    <div id="dice">0</div>
+    <div id="players-turn">Player 1's Turn</div>
+    <div id="winner"></div>
+    <button id="roll-dice">Roll Dice</button>
 
-<div class="game-board">
-  <!-- Render game board tiles here -->
-</div>
-<p>It's <span id="currentPlayer">Player 1</span>'s turn</p>
-<button onclick="rollDice()">Roll Dice</button>
-<p id="dice"></p>
-<button onclick="resetGame()">Reset Game</button>
+    <script>
+        const tiles = document.querySelectorAll('.tile');
+        const player1Token = document.getElementById('player1-token');
+        const player2Token = document.getElementById('player2-token');
+        const dice = document.getElementById('dice');
+        const playersTurn = document.getElementById('players-turn');
+        const winner = document.getElementById('winner');
+        const rollDiceButton = document.getElementById('roll-dice');
 
-<script>
-  let players = [{position: 0}, {position: 0}];
-  let currentPlayer = 0;
+        let currentPlayer = 1;
+        let player1Position = 1;
+        let player2Position = 1;
 
-  const snakesAndLadders = {
-    16: 6,
-    47: 26,
-    49: 11,
-    56: 53,
-    62: 19,
-    64: 60,
-    87: 24,
-    93: 73,
-    95: 75,
-    98: 78
-  };
-
-  const rollDice = () => {
-    const dice = Math.floor(Math.random() * 6) + 1;
-    document.getElementById('dice').textContent = dice;
-
-    players[currentPlayer].position += dice;
-
-    if (snakesAndLadders[players[currentPlayer].position]) {
-      players[currentPlayer].position = snakesAndLadders[players[currentPlayer].position];
-    }
-
-    movePlayer();
-    checkWinner();
-    currentPlayer = currentPlayer === 0 ? 1 : 0;
-    document.getElementById('currentPlayer').textContent = currentPlayer === 0 ? 'Player 1' : 'Player 2';
-  };
-
-  const movePlayer = () => {
-    document.querySelectorAll('.tile').forEach(tile => tile.classList.remove('currentPlayer'));
-    document.getElementById(`player${currentPlayer + 1}`).classList.remove('currentPlayer');
-    document.getElementById(`player${currentPlayer + 1}`).classList.add('currentPlayer');
-  };
-
-  const checkWinner = () => {
-    if (players[currentPlayer].position >= 100) {
-      alert(`Player ${currentPlayer + 1} wins!`);
-    }
-  };
-
-  const resetGame = () => {
-    players = [{position: 0}, {position: 0}];
-    currentPlayer = 0;
-    movePlayer();
-    document.getElementById('dice').textContent = '';
-    document.getElementById('currentPlayer').textContent = 'Player 1';
-  };
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const gameBoard = document.querySelector('.game-board');
-    let tileNumber = 1;
-    for (let i = 9; i >= 0; i--) {
-      for (let j = 0; j < 10; j++) {
-        const tile = document.createElement('div');
-        tile.classList.add('tile');
-        tile.textContent = tileNumber;
-        if (tileNumber === 1) {
-          tile.setAttribute('id', 'player1');
+        const snakes = {
+            16: 6,
+            47: 26,
+            49: 11,
+            56: 53,
+            62: 19,
+            64: 60,
+            87: 24,
+            93: 73,
+            95: 75,
+            98: 78
         }
-        if (tileNumber === 1) {
-          tile.setAttribute('id', 'player1');
-        }
-        gameBoard.appendChild(tile);
-        tileNumber++;
-      }
-    }
-  });
-</script>
 
+        const ladders = {
+            1: 38,
+            4: 14,
+            9: 31,
+            21: 42,
+            28: 84,
+            36: 44,
+            51: 67,
+            71: 91,
+            80: 100
+        }
+
+        function rollDice() {
+            return Math.floor(Math.random() * 6) + 1;
+        }
+
+        function moveToken(player, position) {
+            if (player === 1) {
+                player1Position = position;
+                player1Token.style.gridArea = getPositionGridArea(position);
+            } else {
+                player2Position = position;
+                player2Token.style.gridArea = getPositionGridArea(position);
+            }
+        }
+
+        function getPositionGridArea(position) {
+            const row = 10 - Math.floor((position - 1) / 10);
+            const col = (position - 1) % 10;
+            if (Math.floor((position - 1) / 10) % 2 === 0) {
+                return `${row} / ${col + 1}`;
+            } else {
+                return `${row} / ${10 - col}`;
+            }
+        }
+
+        function checkSnakeOrLadder(position) {
+            if (snakes[position]) {
+                return snakes[position];
+            } else if (ladders[position]) {
+                return ladders[position];
+            }
+            return position;
+        }
+
+        function switchPlayer() {
+            if (currentPlayer === 1) {
+                currentPlayer = 2;
+                playersTurn.innerText = "Player 2's Turn";
+            } else {
+                currentPlayer = 1;
+                playersTurn.innerText = "Player 1's Turn";
+            }
+        }
+
+        function checkWinner(position) {
+            if (position >= 100) {
+                winner.innerText = `Player ${currentPlayer} wins!`;
+                rollDiceButton.disabled = true;
+            }
+        }
+
+        rollDiceButton.addEventListener('click', () => {
+            const diceValue = rollDice();
+            dice.innerText = diceValue;
+
+            const newPosition = checkSnakeOrLadder(currentPlayer === 1 ? player1Position + diceValue : player2Position + diceValue);
+
+            moveToken(currentPlayer, newPosition);
+
+            checkWinner(newPosition);
+
+            switchPlayer();
+        });
+    </script>
 </body>
+
 </html>
