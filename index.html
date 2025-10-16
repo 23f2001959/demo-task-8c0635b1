@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+  
+  .board {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    width: 80vmin;
+    height: 80vmin;
+    margin: 0 auto;
+    border: 2px solid black;
+  }
+  
+  .cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    border: 1px solid black;
+  }
+  
+  .player1 {
+    background-color: red;
+  }
+  
+  .player2 {
+    background-color: blue;
+  }
+  
+  #message {
+    text-align: center;
+    margin: 20px;
+  }
+</style>
+<title>Snake and Ladder Game</title>
+</head>
+<body>
+<div id="message">Player 1's turn</div>
+<div class="board" id="board"></div>
+<button id="reset">Reset</button>
+
+<script>
+  const board = document.getElementById('board');
+  const resetBtn = document.getElementById('reset');
+  const cells = [];
+  let currentPlayer = 1;
+  let player1Position = 0;
+  let player2Position = 0;
+
+  for (let i = 0; i < 100; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    cell.textContent = i + 1;
+    board.appendChild(cell);
+    cells.push(cell);
+  }
+
+  const snakesAndLadders = {
+    2: 38,
+    7: 14,
+    8: 31,
+    15: 26,
+    16: 6,
+    21: 42,
+    28: 84,
+    36: 44,
+    46: 25,
+    49: 11,
+    51: 67,
+    62: 19,
+    64: 60,
+    71: 91,
+    74: 53,
+    78: 98,
+    87: 94,
+    89: 68,
+    92: 88,
+    95: 75,
+    99: 80
+  };
+
+  const rollDice = () => Math.floor(Math.random() * 6) + 1;
+
+  const movePlayer = (player, steps) => {
+    const position = player === 1 ? player1Position : player2Position;
+    const newPosition = position + steps;
+    const finalPosition = snakesAndLadders[newPosition] || newPosition;
+
+    if (player === 1) {
+      player1Position = finalPosition;
+    } else {
+      player2Position = finalPosition;
+    }
+
+    cells[position].classList.remove(`player${player}`);
+    cells[Math.min(finalPosition, 99)].classList.add(`player${player}`);
+
+    return finalPosition;
+  };
+
+  const switchTurn = () => {
+    currentPlayer = currentPlayer === 1 ? 2 : 1;
+    document.getElementById('message').textContent = `Player ${currentPlayer}'s turn`;
+  };
+
+  const checkWinner = () => player1Position >= 99 || player2Position >= 99;
+
+  board.addEventListener('click', () => {
+    if (checkWinner()) {
+      return;
+    }
+
+    const steps = rollDice();
+    const finalPosition = movePlayer(currentPlayer, steps);
+
+    if (finalPosition in snakesAndLadders) {
+      movePlayer(currentPlayer, 0);
+    }
+
+    if (checkWinner()) {
+      document.getElementById('message').textContent = `Player ${currentPlayer} wins!`;
+    } else {
+      switchTurn();
+    }
+  });
+
+  resetBtn.addEventListener('click', () => {
+    cells[player1Position].classList.remove('player1');
+    cells[player2Position].classList.remove('player2');
+    player1Position = 0;
+    player2Position = 0;
+    currentPlayer = 1;
+    cells[0].classList.add('player1');
+    document.getElementById('message').textContent = 'Player 1\'s turn';
+  });
+
+  cells[0].classList.add('player1');
+</script>
+</body>
+</html>
