@@ -1,123 +1,113 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Snake and Ladder Game</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-    }
-    .game-board {
-        display: grid;
-        grid-template-columns: repeat(10, 1fr);
-        grid-template-rows: repeat(10, 1fr);
-        width: 80vw;
-        height: 80vh;
-        border: 2px solid black;
-        margin: 0 auto;
-    }
-    .cell {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .player1 {
-        background-color: red;
-    }
-    .player2 {
-        background-color: blue;
-    }
-</style>
+    <title>Snake and Ladder Game</title>
+    <style>
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            grid-template-rows: repeat(10, 1fr);
+            width: 600px;
+            height: 600px;
+            border: 2px solid black;
+        }
+        .player-one, .player-two {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: red;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+        }
+        .snake {
+            color: blue;
+        }
+        .ladder {
+            color: green;
+        }
+    </style>
 </head>
 <body>
-<div class="game-board">
-    <div class="cell" id="1">1</div>
-    <div class="cell" id="2">2</div>
-    <div class="cell" id="3">3</div>
-    <div class="cell" id="4">4</div>
-    <div class="cell" id="5">5</div>
-    <!-- Repeat for cells 6 to 100 -->
-</div>
-<div id="player1-status"></div>
-<div id="player2-status"></div>
-<button id="roll-dice">Roll Dice</button>
-<div id="dice-value"></div>
-<button id="reset-game">Reset</button>
-<script>
-    let currentPlayer = 1;
-    let player1Position = 1;
-    let player2Position = 1;
+    <div class="game-board"></div>
+    <button onclick="rollDice()">Roll Dice</button>
+    <span id="dice-value"></span>
+    <br>
+    <span id="turn"></span>
+    <button onclick="resetGame()">Reset</button>
 
-    const boardSize = 10;
-    const snakesAndLadders = {
-        16: 6,
-        34: 21,
-        // Add more snakes and ladders mappings if needed
-    };
+    <script>
+        let currentPlayer = 1;
+        let playerOnePosition = 1;
+        let playerTwoPosition = 1;
 
-    document.getElementById('roll-dice').addEventListener('click', () => {
-        const diceValue = Math.ceil(Math.random() * 6);
-        document.getElementById('dice-value').innerText = diceValue;
+        const snakesAndLadders = {
+            16: 6, 47: 26, 49: 11, 56: 53, 62: 19, 64: 60,
+            87: 24, 93: 73, 95: 75, 98: 78
+        };
 
-        if (currentPlayer === 1) {
-            movePlayer(player1Position, diceValue);
-        } else {
-            movePlayer(player2Position, diceValue);
-        }
-    });
-
-    function movePlayer(playerPosition, diceValue) {
-        const newPosition = playerPosition + diceValue;
-        const snakeOrLadder = snakesAndLadders[newPosition];
-        if (snakeOrLadder) {
-            newPosition = snakeOrLadder;
+        function rollDice() {
+            const diceValue = Math.floor(Math.random() * 6) + 1;
+            document.getElementById('dice-value').innerText = diceValue;
+            movePlayer(diceValue);
         }
 
-        if (currentPlayer === 1) {
-            updatePlayerPosition(1, player1Position, newPosition);
-            player1Position = newPosition;
-        } else {
-            updatePlayerPosition(2, player2Position, newPosition);
-            player2Position = newPosition;
+        function movePlayer(steps) {
+            const currentPosition = currentPlayer === 1 ? playerOnePosition : playerTwoPosition;
+            let newPosition = currentPosition + steps;
+            if (newPosition in snakesAndLadders) {
+                newPosition = snakesAndLadders[newPosition];
+            }
+            if (newPosition <= 100) {
+                currentPlayer === 1 ? playerOnePosition = newPosition : playerTwoPosition = newPosition;
+                renderPlayers();
+                if (newPosition === 100) {
+                    alert(`Player ${currentPlayer} wins!`);
+                } else {
+                    currentPlayer = currentPlayer === 1 ? 2 : 1;
+                    document.getElementById('turn').innerText = `Player ${currentPlayer}'s turn`;
+                }
+            }
         }
 
-        currentPlayer = currentPlayer === 1 ? 2 : 1;
-        updatePlayerStats();
-        checkWinner();
-    }
-
-    function updatePlayerPosition(player, oldPosition, newPosition) {
-        document.getElementById(oldPosition).classList.remove(`player${player}`);
-        document.getElementById(newPosition).classList.add(`player${player}`);
-    }
-
-    function updatePlayerStats() {
-        document.getElementById('player1-status').innerText = `Player 1 Position: ${player1Position}`;
-        document.getElementById('player2-status').innerText = `Player 2 Position: ${player2Position}`;
-    }
-
-    function checkWinner() {
-        if (player1Position >= 100) {
-            alert('Player 1 wins!');
-            resetGame();
-        } else if (player2Position >= 100) {
-            alert('Player 2 wins!');
-            resetGame();
+        function renderPlayers() {
+            document.querySelector('.game-board').innerHTML = '';
+            for (let i = 1; i <= 100; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                if (i in snakesAndLadders) {
+                    cell.classList.add('snake');
+                }
+                if (i === 100) {
+                    cell.classList.add('ladder');
+                }
+                if (playerOnePosition === i) {
+                    const playerOneToken = document.createElement('div');
+                    playerOneToken.classList.add('player-one');
+                    playerOneToken.innerText = 'P1';
+                    cell.appendChild(playerOneToken);
+                }
+                if (playerTwoPosition === i) {
+                    const playerTwoToken = document.createElement('div');
+                    playerTwoToken.classList.add('player-two');
+                    playerTwoToken.innerText = 'P2';
+                    cell.appendChild(playerTwoToken);
+                }
+                document.querySelector('.game-board').appendChild(cell);
+            }
         }
-    }
 
-    function resetGame() {
-        currentPlayer = 1;
-        player1Position = 1;
-        player2Position = 1;
-        updatePlayerPosition(1, player1Position, player1Position);
-        updatePlayerPosition(1, player2Position, player2Position);
-        updatePlayerStats();
-    }
+        function resetGame() {
+            currentPlayer = 1;
+            playerOnePosition = 1;
+            playerTwoPosition = 1;
+            document.getElementById('dice-value').innerText = '';
+            document.getElementById('turn').innerText = "Player 1's turn";
+            renderPlayers();
+        }
 
-    document.getElementById('reset-game').addEventListener('click', resetGame);
-</script>
+        renderPlayers();
+    </script>
 </body>
 </html>
